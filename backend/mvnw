@@ -1,0 +1,41 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Maven Wrapper Script — Spring Boot
+# ----------------------------------------------------------------------------
+set -e
+
+# Resolve o diretório do script
+if [ -n "$BASH_SOURCE" ]; then
+    THIS_DIR=$(dirname "$BASH_SOURCE")
+else
+    THIS_DIR=$(dirname "$0")
+fi
+
+MAVEN_PROJECTBASEDIR=$(cd "$THIS_DIR" && pwd)
+
+MAVEN_WRAPPER_PROPERTIES="$MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.properties"
+
+if [ -f "$MAVEN_WRAPPER_PROPERTIES" ]; then
+    DISTRIBUTION_URL=$(grep distributionUrl "$MAVEN_WRAPPER_PROPERTIES" | cut -d'=' -f2-)
+fi
+
+# Diretório de cache do Maven wrapper
+MAVEN_USER_HOME="${MAVEN_USER_HOME:-$HOME/.m2}"
+MAVEN_WRAPPER_DIR="$MAVEN_USER_HOME/wrapper/dists"
+
+# Extrai nome do arquivo e diretório de distribuição
+DIST_ZIP_NAME=$(basename "$DISTRIBUTION_URL")
+DIST_NAME="${DIST_ZIP_NAME%-bin.zip}"
+MAVEN_HOME="$MAVEN_WRAPPER_DIR/$DIST_NAME/$DIST_NAME"
+
+if [ ! -d "$MAVEN_HOME" ]; then
+    echo "Baixando Apache Maven..."
+    mkdir -p "$MAVEN_WRAPPER_DIR/$DIST_NAME"
+    TMP_ZIP="$MAVEN_WRAPPER_DIR/$DIST_NAME/$DIST_ZIP_NAME"
+    curl -fsSL -o "$TMP_ZIP" "$DISTRIBUTION_URL"
+    unzip -q "$TMP_ZIP" -d "$MAVEN_WRAPPER_DIR/$DIST_NAME"
+    rm -f "$TMP_ZIP"
+    echo "Maven instalado em: $MAVEN_HOME"
+fi
+
+exec "$MAVEN_HOME/bin/mvn" "$@"
